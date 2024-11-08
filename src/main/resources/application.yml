@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: batch
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    url: jdbc:hsqldb:mem:testdb
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    username: sa
+    password: password
+  batch:
+    jdbc:
+      initialize-schema: always
+      isolation-level-for-create: repeatable_read
