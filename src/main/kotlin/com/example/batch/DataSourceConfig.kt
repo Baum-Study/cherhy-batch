@@ -12,9 +12,6 @@ class DataSourceConfig(
 ) {
     @Bean
     fun transactionManager(): PlatformTransactionManager {
-        println(dataSource.connection.metaData.url)
-        println(dataSource.connection.metaData.driverName)
-        println(dataSource.connection.metaData.userName)
         return JdbcTransactionManager(dataSource)
     }
 }
