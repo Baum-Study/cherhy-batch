@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation("org.hsqldb:hsqldb:2.7.4")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("org.springframework.boot:spring-boot-starter-batch")
 
     testImplementation("org.springframework.boot:spring-batch-test")
