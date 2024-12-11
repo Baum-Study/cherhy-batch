@@ -8,7 +8,13 @@ spring:
     driver-class-name: org.hsqldb.jdbc.JDBCDriver
     username: sa
     password: password
+  sql:
+    init:
+      mode: always
+      data-locations:
+        - classpath:/initialize-database.sql
   batch:
     jdbc:
       initialize-schema: always
       isolation-level-for-create: repeatable_read
+      schema: classpath:/initialize-database.sql
