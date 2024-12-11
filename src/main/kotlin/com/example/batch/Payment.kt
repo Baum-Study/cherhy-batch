@@ -11,3 +11,11 @@ data class Payment(
     val price: BigDecimal,
     val paymentDate: LocalDateTime,
 )
+
+data class Settlement(
+    val sellerId: Long,
+    val amount: BigDecimal,
+    val settlementDate: LocalDateTime,
+) {
+    val id: Long = 0
+}
