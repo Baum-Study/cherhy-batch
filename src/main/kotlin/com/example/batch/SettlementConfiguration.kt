@@ -1,5 +1,8 @@
 package com.example.batch
 
+import com.example.batch.extension.batchUpdate
+import com.example.batch.extension.sql
+import com.example.batch.extension.sumOf
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
@@ -15,12 +18,15 @@ import org.springframework.batch.item.file.transform.FieldSet
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.transaction.PlatformTransactionManager
 import java.time.LocalDateTime
 import kotlin.text.Charsets.UTF_8
 
 @Configuration
-class SettlementConfiguration {
+class SettlementConfiguration(
+    private val jdbcTemplate: JdbcTemplate,
+) {
     @Bean
     fun settlementItemReader(): ItemReader<Payment> {
         val tokenizer =
@@ -59,9 +65,30 @@ class SettlementConfiguration {
 
             val map = settlements.groupBy { it.sellerId }
             val result = map.sumOf { it.amount }
+            val sellerIds = map.keys
 
-            println("result: $result")
-            // TODO: Database 저장 로직 추가
+            val findSettlements =
+                jdbcTemplate.sql(
+                    "SELECT seller_id, amount FROM settlement WHERE seller_id IN (:sellerIds)",
+                    mapOf("sellerIds" to sellerIds),
+                ) {
+                    Settlement(
+                        sellerId = getLong("seller_id"),
+                        amount = getBigDecimal("amount"),
+                        settlementDate = LocalDateTime.now()
+                    )
+                }
+
+            val updateModels =
+                findSettlements.map {
+                    val amount = result.getValue(it.sellerId)
+                    it.copy(amount = amount)
+                }.map(Settlement::toMap)
+
+            jdbcTemplate.batchUpdate(
+                "UPDATE settlement SET amount = :amount WHERE seller_id = :sellerId",
+                updateModels,
+            )
         }
 
     @Bean
