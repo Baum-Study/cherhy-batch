@@ -18,4 +18,11 @@ data class Settlement(
     val settlementDate: LocalDateTime,
 ) {
     val id: Long = 0
+
+    val toMap: Map<String, Any?> = mapOf(
+        "id" to id,
+        "sellerId" to sellerId,
+        "amount" to amount,
+        "settlementDate" to settlementDate,
+    )
 }
