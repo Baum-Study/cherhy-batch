@@ -1,9 +1,11 @@
 package com.example.batch
 
-import com.example.batch.SettlementConfiguration.Companion.SETTLEMENT_JOB
+import com.example.batch.config.SettlementConfiguration.Companion.SETTLEMENT_JOB
 import com.example.batch.lib.JobParameterFactory
 import com.example.batch.lib.PaymentFactory
 import com.example.batch.lib.mapParallel
+import com.example.batch.model.Settlement
+import com.example.batch.util.LinkedListItemReader
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.batch.core.Job

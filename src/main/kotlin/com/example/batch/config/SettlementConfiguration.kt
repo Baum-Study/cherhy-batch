@@ -1,8 +1,10 @@
-package com.example.batch
+package com.example.batch.config
 
-import com.example.batch.extension.batchUpdate
-import com.example.batch.extension.sql
-import com.example.batch.extension.sumOf
+import com.example.batch.model.Payment
+import com.example.batch.model.Settlement
+import com.example.batch.util.extension.batchUpdate
+import com.example.batch.util.extension.sql
+import com.example.batch.util.extension.sumOf
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer

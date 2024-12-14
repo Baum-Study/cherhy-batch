@@ -1,5 +1,10 @@
-package com.example.batch
+package com.example.batch.config
 
+import com.example.batch.model.Customer
+import com.example.batch.processer.AggregateCustomerProcessor
+import com.example.batch.processer.CustomerFooter
+import com.example.batch.processer.CustomerHeader
+import com.example.batch.processer.CustomerLineAggregator
 import mu.KotlinLogging
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step

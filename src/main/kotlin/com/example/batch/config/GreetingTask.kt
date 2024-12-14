@@ -1,4 +1,4 @@
-package com.example.batch
+package com.example.batch.config
 
 import mu.KotlinLogging
 import org.springframework.batch.core.StepContribution

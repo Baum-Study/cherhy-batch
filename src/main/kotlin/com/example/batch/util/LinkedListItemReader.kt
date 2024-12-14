@@ -1,4 +1,4 @@
-package com.example.batch
+package com.example.batch.util
 
 import org.springframework.aop.support.AopUtils
 import org.springframework.batch.item.ItemReader

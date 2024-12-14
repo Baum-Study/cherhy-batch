@@ -1,5 +1,7 @@
-package com.example.batch
+package com.example.batch.processer
 
+import com.example.batch.model.InputModel
+import com.example.batch.model.OutputModel
 import mu.KotlinLogging
 import org.springframework.batch.item.ItemProcessor
 
@@ -17,13 +19,3 @@ class MyItemProcessor: ItemProcessor<InputModel, OutputModel> {
         )
     }
 }
-
-data class InputModel(
-    val id: Int,
-    val name: String,
-)
-
-data class OutputModel(
-    val id: Int,
-    val name: String,
-)

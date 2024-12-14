@@ -1,6 +1,6 @@
 package com.example.batch.lib
 
-import com.example.batch.Payment
+import com.example.batch.model.Payment
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.randomizers.text.StringRandomizer

@@ -1,4 +1,4 @@
-package com.example.batch
+package com.example.batch.model
 
 import java.math.BigDecimal
 import java.time.LocalDateTime
