@@ -5,6 +5,7 @@ import com.example.batch.lib.JobParameterFactory
 import com.example.batch.lib.PaymentFactory
 import com.example.batch.lib.mapParallel
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import org.springframework.batch.core.Job
 import org.springframework.batch.test.JobLauncherTestUtils
 import org.springframework.batch.test.JobRepositoryTestUtils
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.core.io.ClassPathResource
+import org.springframework.jdbc.core.JdbcTemplate
 import java.io.File
 import java.io.PrintWriter
 
@@ -23,6 +25,7 @@ class CreateFileTests(
     @Autowired private val jobLauncherTestUtils: JobLauncherTestUtils,
     @Autowired private val jobRepositoryTestUtils: JobRepositoryTestUtils,
     @Autowired @Qualifier(SETTLEMENT_JOB) private val settlementJob: Job,
+    @Autowired private val jdbcTemplate: JdbcTemplate,
 ) : StringSpec({
     afterEach {
         jobRepositoryTestUtils.removeJobExecutions()
@@ -53,5 +56,21 @@ class CreateFileTests(
         val job = JobParameterFactory.create(SETTLEMENT_JOB)
 
         jobLauncherTestUtils.launchJob(job)
+        val settlements =
+            jdbcTemplate.query("SELECT * FROM settlement") { rs, _ ->
+                Settlement(
+                    sellerId = rs.getLong("seller_id"),
+                    amount = rs.getBigDecimal("amount"),
+                    settlementDate = rs.getTimestamp("settlement_date").toLocalDateTime()
+                )
+            }
+
+        val sortedSettlements = settlements.sortedBy { it.sellerId }
+
+        sortedSettlements.forEach {
+            println(it)
+        }
+
+        sortedSettlements.size shouldBe 100
     }
 })

@@ -79,6 +79,27 @@ class SettlementConfiguration(
                     )
                 }
 
+            val existingSellerIds = findSettlements.map { it.sellerId }.toSet()
+            val newSellerIds = sellerIds - existingSellerIds
+
+            val insertModels =
+                newSellerIds.mapNotNull { sellerId ->
+                    map[sellerId]?.let { grouped ->
+                        Settlement(
+                            sellerId = sellerId,
+                            amount = grouped.sumOf { it.amount },
+                            settlementDate = LocalDateTime.now()
+                        ).toMap()
+                    }
+                }
+
+            if (insertModels.isNotEmpty()) {
+                jdbcTemplate.batchUpdate(
+                    "INSERT INTO settlement (seller_id, amount, settlement_date) VALUES (:sellerId, :amount, :settlementDate)",
+                    insertModels,
+                )
+            }
+
             val updateModels =
                 findSettlements.map {
                     val amount = result.getValue(it.sellerId)
