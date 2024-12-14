@@ -19,10 +19,11 @@ data class Settlement(
 ) {
     val id: Long = 0
 
-    val toMap: Map<String, Any?> = mapOf(
-        "id" to id,
-        "sellerId" to sellerId,
-        "amount" to amount,
-        "settlementDate" to settlementDate,
-    )
+    fun toMap(): Map<String, Any?> =
+        mapOf(
+            "id" to id,
+            "sellerId" to sellerId,
+            "amount" to amount,
+            "settlementDate" to settlementDate,
+        )
 }
