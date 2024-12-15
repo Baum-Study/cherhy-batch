@@ -1,5 +1,6 @@
 package com.example.batch.model
 
+import com.example.batch.config.BatchMapper
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -16,10 +17,10 @@ data class Settlement(
     val sellerId: Long,
     val amount: BigDecimal,
     val settlementDate: LocalDateTime,
-) {
+): BatchMapper {
     val id: Long = 0
 
-    fun toMap(): Map<String, Any?> =
+    override fun toMap(): Map<String, Any?> =
         mapOf(
             "id" to id,
             "sellerId" to sellerId,

@@ -61,7 +61,7 @@ class SettlementConfiguration(
                         Settlement(
                             sellerId = sellerId,
                             amount = groupedPayments.sumOf { it.price },
-                            settlementDate = LocalDateTime.now()
+                            settlementDate = LocalDateTime.now(),
                         )
                     }
 
@@ -77,7 +77,7 @@ class SettlementConfiguration(
                     Settlement(
                         sellerId = getLong("seller_id"),
                         amount = getBigDecimal("amount"),
-                        settlementDate = LocalDateTime.now()
+                        settlementDate = LocalDateTime.now(),
                     )
                 }
 
@@ -90,8 +90,8 @@ class SettlementConfiguration(
                         Settlement(
                             sellerId = sellerId,
                             amount = grouped.sumOf { it.amount },
-                            settlementDate = LocalDateTime.now()
-                        ).toMap()
+                            settlementDate = LocalDateTime.now(),
+                        )
                     }
                 }
 
@@ -106,7 +106,7 @@ class SettlementConfiguration(
                 findSettlements.map {
                     val amount = result.getValue(it.sellerId)
                     it.copy(amount = amount)
-                }.map(Settlement::toMap)
+                }
 
             jdbcTemplate.batchUpdate(
                 "UPDATE settlement SET amount = :amount WHERE seller_id = :sellerId",

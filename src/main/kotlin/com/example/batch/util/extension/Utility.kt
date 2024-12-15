@@ -1,5 +1,6 @@
 package com.example.batch.util.extension
 
+import com.example.batch.config.BatchMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.math.BigDecimal
@@ -30,4 +31,14 @@ fun JdbcTemplate.batchUpdate(
 ): IntArray {
     val namedTemplate = NamedParameterJdbcTemplate(this)
     return namedTemplate.batchUpdate(query, paramsList.toTypedArray())
+}
+
+@Suppress("SqlSourceToSinkFlow")
+fun JdbcTemplate.batchUpdate(
+    query: String,
+    batchMapper: List<BatchMapper>,
+): IntArray {
+    val map = batchMapper.map { it.toMap() }
+    val namedTemplate = NamedParameterJdbcTemplate(this)
+    return namedTemplate.batchUpdate(query, map.toTypedArray())
 }
