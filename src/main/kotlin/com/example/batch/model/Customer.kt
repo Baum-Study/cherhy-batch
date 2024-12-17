@@ -13,5 +13,11 @@ class Customer(
 
     val age: Int,
 
-    val gender: String,
+    val status: Status,
 )
+
+enum class Status {
+    ACTIVE,
+    INACTIVE,
+    ;
+}
