@@ -27,15 +27,6 @@ fun <T> JdbcTemplate.sql(
 @Suppress("SqlSourceToSinkFlow")
 fun JdbcTemplate.batchUpdate(
     query: String,
-    paramsList: List<Map<String, Any?>>
-): IntArray {
-    val namedTemplate = NamedParameterJdbcTemplate(this)
-    return namedTemplate.batchUpdate(query, paramsList.toTypedArray())
-}
-
-@Suppress("SqlSourceToSinkFlow")
-fun JdbcTemplate.batchUpdate(
-    query: String,
     batchMapper: List<BatchMapper>,
 ): IntArray {
     val map = batchMapper.map { it.toMap() }
