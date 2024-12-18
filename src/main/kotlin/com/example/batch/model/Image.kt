@@ -14,4 +14,8 @@ class Image(
     @ManyToOne
     @JoinColumn(name = "customer_id")
     val customer: Customer,
-)
+) {
+    override fun toString(): String {
+        return "Image(id=$id, url='$url', customer=$customer)"
+    }
+}

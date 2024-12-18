@@ -14,7 +14,11 @@ class Customer(
     val age: Int,
 
     val status: Status,
-)
+) {
+    override fun toString(): String {
+        return "Customer(id=$id, name='$name', age=$age, status=$status)"
+    }
+}
 
 enum class Status {
     ACTIVE,
