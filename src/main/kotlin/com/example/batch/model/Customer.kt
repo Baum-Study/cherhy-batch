@@ -13,6 +13,7 @@ class Customer(
 
     val age: Int,
 
+    @Enumerated(EnumType.STRING)
     val status: Status,
 ) {
     override fun toString(): String {
