@@ -1,6 +1,6 @@
 package com.example.batch.config
 
-import com.example.batch.model.Customer
+import com.example.batch.model.Image
 import com.example.batch.model.Status
 import jakarta.persistence.EntityManagerFactory
 import org.springframework.batch.core.Step
@@ -8,8 +8,9 @@ import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
+import org.springframework.batch.item.ItemProcessor
 import org.springframework.batch.item.database.JpaCursorItemReader
-import org.springframework.batch.item.database.builder.JpaItemWriterBuilder
+import org.springframework.batch.item.database.JpaItemWriter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
@@ -20,19 +21,44 @@ class DeleteCustomerConfiguration(
 ) {
     @Bean(DELETE_CUSTOMER_READER)
     fun deleteCustomerReader() =
-        JpaCursorItemReader<Customer>().apply {
-            setQueryString("SELECT c FROM Customer c WHERE c.status = :status order by id desc")
+        JpaCursorItemReader<Image>().apply {
+            setQueryString(
+                """
+                    SELECT i 
+                    FROM Image i 
+                    JOIN i.customer c
+                    WHERE c.status = :status
+                    ORDER BY i.id
+                """
+            )
+
             setEntityManagerFactory(entityManagerFactory)
             val parameterMap = mapOf("status" to Status.INACTIVE.name)
             setParameterValues(parameterMap)
         }
 
+    @Bean(DELETE_CUSTOMER_PROCESSOR)
+    fun deleteCustomerProcessor() =
+        ItemProcessor<Image, Image> { image ->
+            entityManagerFactory.createEntityManager().apply {
+                transaction.begin()
+
+                remove(image)
+                remove(image.customer)
+
+                transaction.commit()
+                close()
+            }
+            null
+        }
+
     @Bean(DELETE_CUSTOMER_WRITER)
     fun deleteCustomerWriter() =
-        JpaItemWriterBuilder<Customer>()
-            .entityManagerFactory(entityManagerFactory)
-            .usePersist(true)
-            .build()
+        JpaItemWriter<Image>().apply {
+            setEntityManagerFactory(entityManagerFactory)
+            setUsePersist(false)
+            afterPropertiesSet()
+        }
 
     @Bean(DELETE_CUSTOMER_STEP)
     fun deleteCustomerStep(
@@ -40,8 +66,9 @@ class DeleteCustomerConfiguration(
         transactionManager: PlatformTransactionManager,
     ) =
         StepBuilder(DELETE_CUSTOMER_STEP, jobRepository)
-            .chunk<Customer, Customer>(CHUNK_SIZE, transactionManager)
+            .chunk<Image, Image>(CHUNK_SIZE, transactionManager)
             .reader(deleteCustomerReader())
+            .processor(deleteCustomerProcessor())
             .writer(deleteCustomerWriter())
             .build()
 
@@ -58,6 +85,7 @@ class DeleteCustomerConfiguration(
     companion object {
         private const val CHUNK_SIZE = 1000
         const val DELETE_CUSTOMER_READER = "deleteCustomerReader"
+        const val DELETE_CUSTOMER_PROCESSOR = "deleteCustomerProcessor"
         const val DELETE_CUSTOMER_WRITER = "deleteCustomerWriter"
         const val DELETE_CUSTOMER_STEP = "deleteCustomerStep"
         const val DELETE_CUSTOMER_JOB = "deleteCustomerJob"
