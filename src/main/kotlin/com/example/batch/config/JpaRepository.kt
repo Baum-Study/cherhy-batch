@@ -11,5 +11,5 @@ interface CustomerRepository : JpaRepository<Customer, Long> {
 }
 
 interface ImageRepository : JpaRepository<Image, Long> {
-    fun findByCustomerIn(customers: List<Customer>): List<Image>
+    fun countByCustomerIn(customers: List<Customer>): Long
 }

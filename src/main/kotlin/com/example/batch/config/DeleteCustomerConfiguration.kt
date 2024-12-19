@@ -19,21 +19,25 @@ import org.springframework.transaction.PlatformTransactionManager
 class DeleteCustomerConfiguration(
     private val entityManagerFactory: EntityManagerFactory,
 ) {
+    /**
+     * fetch join을 사용하지 않았을 때는 customer를 조회할 때 query가 계속 나가서 이미지 수 만큼 DB에 쿼리를 날린다.
+     */
     @Bean(DELETE_CUSTOMER_READER)
     fun deleteCustomerReader() =
         JpaCursorItemReader<Image>().apply {
             setQueryString(
                 """
-                    SELECT i 
-                    FROM Image i 
-                    JOIN i.customer c
-                    WHERE c.status = :status
-                    ORDER BY i.id
+                    SELECT image 
+                    FROM Image image 
+                    JOIN FETCH image.customer customer 
+                    WHERE customer.status = :status
+                    ORDER BY image.id
                 """
             )
 
             setEntityManagerFactory(entityManagerFactory)
-            val parameterMap = mapOf("status" to Status.INACTIVE.name)
+            setMaxItemCount(CHUNK_SIZE)
+            val parameterMap = mapOf("status" to Status.INACTIVE)
             setParameterValues(parameterMap)
         }
 
@@ -43,8 +47,11 @@ class DeleteCustomerConfiguration(
             entityManagerFactory.createEntityManager().apply {
                 transaction.begin()
 
-                remove(image)
-                remove(image.customer)
+                val managedImage = merge(image)
+                val managedCustomer = merge(image.customer)
+
+                remove(managedImage)
+                remove(managedCustomer)
 
                 transaction.commit()
                 close()
