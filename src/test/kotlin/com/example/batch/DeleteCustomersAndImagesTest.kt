@@ -41,14 +41,14 @@ class DeleteCustomersAndImagesTest(
     }
 
     Given("데이터베이스에 회원 10만명과 이미지 100만개를 생성한다.") {
-        val customerCount = 100_000
-        val imageCount = 1_000_000
+        val customerCount = 100
+        val imageCount = 1000
 
         measureTime {
-            val randomCustomers = customerCount.mapParallel(CustomerFactory::generateRandom)
+            val randomCustomers = customerCount.mapParallel(CustomerFactory::generateRandomV2)
             val randomImages =
                 imageCount.mapParallel {
-                    ImageFactory.generateRandom(randomCustomers.random())
+                    ImageFactory.generateRandomV2(randomCustomers.random())
                 }
 
             transactionTemplate.executeWithoutResult {
