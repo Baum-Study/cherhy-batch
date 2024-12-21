@@ -36,7 +36,6 @@ class DeleteCustomerConfiguration(
             )
 
             setEntityManagerFactory(entityManagerFactory)
-            setMaxItemCount(CHUNK_SIZE)
             val parameterMap = mapOf("status" to Status.INACTIVE)
             setParameterValues(parameterMap)
         }
