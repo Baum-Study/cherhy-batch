@@ -6,8 +6,13 @@ import com.example.batch.lib.PaymentFactory
 import com.example.batch.lib.mapParallel
 import com.example.batch.model.Settlement
 import com.example.batch.util.LinkedListItemReader
+import io.kotest.core.spec.SpecExecutionOrder
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.property.Arb
+import io.kotest.property.RandomSource
+import io.kotest.property.arbitrary.next
+import io.kotest.property.arbitrary.stringPattern
 import org.springframework.batch.core.Job
 import org.springframework.batch.test.JobLauncherTestUtils
 import org.springframework.batch.test.JobRepositoryTestUtils
@@ -74,5 +79,18 @@ class CreateFileTests(
         }
 
         sortedSettlements.size shouldBe 100
+    }
+
+    "정규식에 맞는 랜덤 데이터를 생성한다." {
+        val regex = "[가-힣]{5}[0-9]{3}"
+        val arbRegex = Arb.stringPattern(regex)
+
+        repeat(10) {
+            val test = arbRegex.next()
+            println("test: $test")
+
+            val sample = arbRegex.sample(RandomSource.default())
+            println("sample: $sample")
+        }
     }
 })

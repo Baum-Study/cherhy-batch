@@ -4,10 +4,8 @@ import com.example.batch.model.Customer
 import com.example.batch.model.Image
 import com.example.batch.model.Status
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.enum
-import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.*
 import io.kotest.property.arbitrary.next
-import io.kotest.property.arbitrary.string
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.randomizers.text.StringRandomizer
