@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.batch.config.ProductRepository">
+
+    <select id="selectProducts" resultType="PurchasedProduct">
+        SELECT
+        id, customer_id, product_id, price, status, purchased_at
+        FROM product
+        where
+        purchased_at >= DATE_ADD(NOW(), INTERVAL -1 WEEK)
+    </select>
+
+    <!-- 이 쿼리를 in 절로 변경해야 함 -->
+    <update id="updateProducts" parameterType="PurchasedProduct">
+        UPDATE product SET status = #{status} WHERE id = #{id}
+    </update>
+</mapper>
