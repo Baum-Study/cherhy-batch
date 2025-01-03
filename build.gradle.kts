@@ -26,6 +26,8 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.mybatis:mybatis:3.5.16")
+    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4")
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
     kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
     testImplementation("org.springframework.batch:spring-batch-test:5.1.2")
