@@ -27,3 +27,8 @@ spring:
       initialize-schema: always
       isolation-level-for-create: repeatable_read
       schema: classpath:/initialize-database.sql
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.batch.model
+  configuration:
+    map-underscore-to-camel-case: true
