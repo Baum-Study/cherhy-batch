@@ -4,17 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.batch.config.ProductRepository">
-
-    <select id="selectProducts" resultType="PurchasedProduct">
-        SELECT
-        id, customer_id, product_id, price, status, purchased_at
-        FROM product
-        where
-        purchased_at >= DATE_ADD(NOW(), INTERVAL -1 WEEK)
-    </select>
-
-    <!-- 이 쿼리를 in 절로 변경해야 함 -->
-    <update id="updateProducts" parameterType="PurchasedProduct">
-        UPDATE product SET status = #{status} WHERE id = #{id}
-    </update>
+    <insert id="saveAll" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (name, customer_id, price, created_at, updated_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name}, #{item.customerId}, #{item.price}, #{item.createdAt}, #{item.updatedAt})
+        </foreach>
+    </insert>
 </mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.batch.config.PurchaseRepository">
+    <insert id="saveAll" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO purchased_product (customer_id, product_id, price, status, purchased_at)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.customerId}, #{item.productId}, #{item.price}, #{item.status}, #{item.purchasedAt})
+        </foreach>
+    </insert>
+
+<!--    <select id="findAll" resultType="com.example.batch.model.PurchasedProduct">-->
+<!--        SELECT * FROM purchased_product-->
+<!--        WHERE purchased_at >= #{date}-->
+<!--        and status = #{status}-->
+<!--    </select>-->
+
+    <!-- 이 쿼리를 in 절로 변경해야 함 -->
+<!--    <update id="update" parameterType="com.example.batch.model.PurchasedProduct">-->
+<!--        UPDATE purchased_product SET status = #{status} WHERE id = #{id}-->
+<!--    </update>-->
+</mapper>
