@@ -1,8 +1,7 @@
 package com.example.batch.lib
 
-import com.example.batch.model.Customer
-import com.example.batch.model.Image
-import com.example.batch.model.Status
+import com.example.batch.model.*
+import com.example.batch.model.PurchaseStatus.PURCHASED
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.*
 import io.kotest.property.arbitrary.next
@@ -66,4 +65,33 @@ internal object ImageFactory {
         url = Arb.string(1..10).next(),
         customer = customer,
     )
+}
+
+internal object ProductFactory {
+    fun generateRandomV2(
+        customerId: Long,
+    ) =
+        Product(
+            id = 0,
+            name = Arb.string(1..10).next(),
+            customerId = customerId,
+            price = Arb.long(1000L..10000).next().toBigDecimal(),
+            createdAt = Arb.localDateTime(2024, 2024).next(),
+            updatedAt = Arb.localDateTime(2024, 2024).next(),
+        )
+}
+
+internal object PurchaseFactory {
+    fun generateRandomV2(
+        customerId: Long,
+        product: Product,
+    ) =
+        PurchasedProduct(
+            id = 0,
+            customerId = customerId,
+            productId = product.id,
+            status = PURCHASED,
+            price = product.price,
+            purchasedAt = Arb.localDateTime(2024, 2024).next(),
+        )
 }
