@@ -1,5 +1,6 @@
 package com.example.batch.config
 
+import com.example.batch.model.PurchaseStatus
 import com.example.batch.model.PurchasedProduct
 import org.apache.ibatis.session.SqlSessionFactory
 import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder
@@ -11,6 +12,7 @@ import org.springframework.batch.core.step.builder.StepBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
+import java.time.LocalDateTime
 
 @Configuration
 class CompleteProductJobConfig(
@@ -43,6 +45,12 @@ class CompleteProductJobConfig(
             .pageSize(1000)
             .sqlSessionFactory(sqlSessionFactory)
             .queryId(PRODUCT_READ_QUERY)
+            .parameterValues(
+                mapOf(
+                    "status" to PurchaseStatus.PURCHASED,
+                    "date" to LocalDateTime.now().minusWeeks(1),
+                )
+            )
             .build()!!
 
     @Bean(COMPLETE_PRODUCT_ITEM_WRITER)
@@ -52,9 +60,9 @@ class CompleteProductJobConfig(
             .statementId(PRODUCT_WRITE_QUERY)
             .build()!!
 
-    private companion object {
-        const val PRODUCT_READ_QUERY = "com.example.batch.mapper.ProductMapper.selectProducts"
-        const val PRODUCT_WRITE_QUERY = "com.example.batch.mapper.ProductMapper.updateProducts"
+    companion object {
+        const val PRODUCT_READ_QUERY = "com.example.batch.config.PurchaseRepository.findAll"
+        const val PRODUCT_WRITE_QUERY = "com.example.batch.config.PurchaseRepository.updateDeliveryComplete"
         const val COMPLETE_PRODUCT_JOB = "completeProductJob"
         const val COMPLETE_PRODUCT_STEP = "completeProductStep"
         const val COMPLETE_PRODUCT_ITEM_READER = "completeProductItemReader"
