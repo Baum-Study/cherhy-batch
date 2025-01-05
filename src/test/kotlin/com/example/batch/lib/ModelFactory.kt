@@ -95,3 +95,16 @@ internal object PurchaseFactory {
             purchasedAt = Arb.localDateTime(2024, 2024).next(),
         )
 }
+
+internal object MileageFactory {
+    fun generateRandomV2(
+        customerId: Long,
+    ) =
+        Mileage(
+            id = 0,
+            customerId = customerId,
+            price = Arb.long(1000L..10000).next().toBigDecimal(),
+            createdAt = Arb.localDateTime(2024, 2024).next(),
+            updatedAt = Arb.localDateTime(2024, 2024).next(),
+        )
+}
