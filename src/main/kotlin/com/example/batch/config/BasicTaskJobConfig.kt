@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 
 @Configuration
-class BasicTaskJobConfiguration(
+class BasicTaskJobConfig(
     private val transactionManager: PlatformTransactionManager,
 ) {
     private val logger = KotlinLogging.logger {}
