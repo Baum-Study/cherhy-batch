@@ -1,7 +1,7 @@
 package com.example.batch.config
 
-import com.example.batch.util.extension.FlowStatus.COMPLETED
-import com.example.batch.util.extension.FlowStatus.FAILED
+import com.example.batch.util.extension.FlowStatus.Companion.FAILED
+import com.example.batch.util.extension.FlowStatus.Companion.COMPLETED
 import com.example.batch.util.extension.on
 import mu.KotlinLogging
 import org.springframework.batch.core.Job

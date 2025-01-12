@@ -13,7 +13,18 @@ fun <T> FlowBuilder<T>.on(
 ) =
     this.on(status.name)
 
-enum class FlowStatus {
-    COMPLETED,
-    FAILED,
+open class FlowStatus(
+    val name: String,
+) {
+    companion object {
+        val COMPLETED = FlowStatus("COMPLETED")
+        val FAILED = FlowStatus("FAILED")
+    }
+}
+
+class FlowStatusExtension {
+    companion object {
+        val START = FlowStatus("START")
+        val END = FlowStatus("END")
+    }
 }
