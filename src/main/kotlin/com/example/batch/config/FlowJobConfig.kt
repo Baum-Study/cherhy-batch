@@ -1,5 +1,8 @@
 package com.example.batch.config
 
+import com.example.batch.util.extension.FlowStatus.COMPLETED
+import com.example.batch.util.extension.FlowStatus.FAILED
+import com.example.batch.util.extension.on
 import mu.KotlinLogging
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
@@ -7,7 +10,7 @@ import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.launch.support.RunIdIncrementer
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
-import org.springframework.batch.repeat.RepeatStatus
+import org.springframework.batch.repeat.RepeatStatus.FINISHED
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
@@ -29,7 +32,7 @@ class FlowJobConfig(
         ).tasklet(
             { _, _ ->
                 log.info("Execute Step 01 Tasklet ...")
-                RepeatStatus.FINISHED
+                FINISHED
             }, transactionManager
         ).build()
     }
@@ -42,7 +45,7 @@ class FlowJobConfig(
         return StepBuilder("step02", jobRepository).tasklet(
             { _, _ ->
                 log.info("Execute Step 02 Tasklet ...")
-                RepeatStatus.FINISHED
+                FINISHED
             }, transactionManager
         ).build()
     }
@@ -55,7 +58,7 @@ class FlowJobConfig(
         return StepBuilder("step03", jobRepository).tasklet(
             { _, _ ->
                 log.info("Execute Step 03 Tasklet ...")
-                RepeatStatus.FINISHED
+                FINISHED
             }, transactionManager
         ).build()
     }
@@ -84,8 +87,8 @@ class FlowJobConfig(
         log.info { "------------------ Init myJob -----------------" }
         return JobBuilder(NEXT_STEP_TASK, jobRepository)
             .incrementer(RunIdIncrementer())
-            .start(step01).on("FAILED").to(step03)
-            .from(step01).on("COMPLETED").to(step02)
+            .start(step01).on(FAILED).to(step03)
+            .from(step01).on(COMPLETED).to(step02)
             .end()
             .build()
     }
@@ -99,8 +102,8 @@ class FlowJobConfig(
         log.info { "------------------ Init myJob -----------------" }
         return JobBuilder(NEXT_STEP_TASK, jobRepository)
             .incrementer(RunIdIncrementer())
-            .start(step01).on("FAILED").stop()
-            .from(step01).on("COMPLETED").to(step02)
+            .start(step01).on(FAILED).stop()
+            .from(step01).on(COMPLETED).to(step02)
             .end()
             .build()
     }
